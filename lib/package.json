@@ -1,8 +1,8 @@
 {
-  "name": "@tronlink/lib",
+  "name": "@tron-wallet-js/lib",
   "main": "index.js",
-  "repository": "https://github.com/TronLink/TronLink",
-  "author": "Kondax <kondaxsolutions@gmail.com>",
+  "repository": "https://github.com/bytejedi/tron-wallet-js",
+  "author": "bytejedi <me@bytejedi.com>",
   "private": true,
   "version": "3.0.1",
   "dependencies": {
