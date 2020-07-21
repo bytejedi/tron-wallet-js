@@ -2,11 +2,8 @@ import StorageService from './storage';
 import randomUUID from 'uuid/v4';
 import TronWeb from 'tronweb';
 import SunWeb from 'sunweb';
-import Logger from './lib/logger';
 import { CONTRACT_ADDRESS,SIDE_CHAIN_ID,NODE } from './lib/constants';
 import { BigNumber } from 'bignumber.js';
-
-const logger = new Logger('NodeService');
 
 const NodeService = {
     _chains:{
@@ -67,7 +64,7 @@ const NodeService = {
     _selectedChain:'_',
     _selectedNode: 'f0b1e38e-7bee-485e-9d3f-69410bf30681',
     _read() {
-        logger.info('Reading nodes and chains from storage');
+        console.info('Reading nodes and chains from storage');
 
         const {
             chainList = {},
@@ -237,7 +234,7 @@ const NodeService = {
                 balance
             };
         } catch(ex) {
-            logger.error(`Failed to fetch token ${ address }:`, ex);
+            console.error(`Failed to fetch token ${ address }:`, ex);
             return false;
         }
     }

@@ -1,6 +1,5 @@
 import StorageService from './storage';
 import TronWeb from 'tronweb';
-import Logger from './lib/logger';
 import Utils from './lib/utils';
 import NodeService from './fullnode';
 
@@ -16,7 +15,6 @@ import {
 import axios from 'axios';
 
 BigNumber.config({ EXPONENTIAL_AT: [-20, 30] });
-const logger = new Logger('WalletService/Account');
 
 class Account {
     constructor(accountType, importData, accountIndex = 0) {
@@ -114,7 +112,7 @@ class Account {
 
     loadCache() {
         if (!StorageService.hasAccount(this.address)) {
-            return logger.warn('Attempted to load cache for an account that does not exist');
+            return console.warn('Attempted to load cache for an account that does not exist');
         }
 
         const {
@@ -215,7 +213,7 @@ class Account {
         if (!StorageService.allTokens[NodeService._selectedChain === '_' ? 'mainchain' : 'sidechain'].length) return;
         const selectedChain = NodeService._selectedChain;
         const { address } = this;
-        logger.info(`Requested update for ${ address }`);
+        console.info(`Requested update for ${ address }`);
         const { data: { data: smartTokens } } = await axios.get(`${API_URL}/api/wallet/trc20_info`, {
             headers: { chain: selectedChain === '_' ? 'MainChain' : 'DAppChain' },
             params: { address }
@@ -228,7 +226,7 @@ class Account {
             const account = await NodeService.tronWeb.trx.getUnconfirmedAccount(address);
 
             if (!account.address) {
-                logger.info(`Account ${address} does not exist on the network`);
+                console.info(`Account ${address} does not exist on the network`);
                 this.reset();
                 return true;
             }
@@ -355,7 +353,7 @@ class Account {
             //} else {
             // const account = await NodeService.tronWeb.trx.getUnconfirmedAccount(address);
             // if (!account.address) {
-            //     logger.info(`Account ${address} does not exist on the network`);
+            //     console.info(`Account ${address} does not exist on the network`);
             //     this.reset();
             //     return true;
             // }
@@ -441,10 +439,10 @@ class Account {
             await Promise.all([
                 this.updateBalance(),
             ]);
-            logger.info(`Account ${address} successfully updated`);
+            console.info(`Account ${address} successfully updated`);
             Object.keys(StorageService.getAccounts()).includes(this.address) && this.save();
         } catch (error) {
-            logger.error(`update account ${this.address} fail`, error);
+            console.error(`update account ${this.address} fail`, error);
         }
         return true;
     }
@@ -461,7 +459,7 @@ class Account {
     }
 
     async addSmartToken({ address, name, decimals, symbol }) {
-        logger.info(`Adding TRC20 token '${ address }' ${ name } (${ symbol }) to account '${ this.address }'`);
+        console.info(`Adding TRC20 token '${ address }' ${ name } (${ symbol }) to account '${ this.address }'`);
 
         let balance = 0;
 
@@ -477,7 +475,7 @@ class Account {
                 balance = bn.toString();
             }
         } catch (e) {
-            logger.error(`add smart token ${address} ${name} fail`, e);
+            console.error(`add smart token ${address} ${name} fail`, e);
         }
 
         this.tokens.smart[address] = {
@@ -554,7 +552,7 @@ class Account {
                 return Promise.resolve(transaction.txID);
             }
         } catch (ex) {
-            logger.error('Failed to send TRX:', ex);
+            console.error('Failed to send TRX:', ex);
             return Promise.reject(ex);
         }
     }
@@ -580,7 +578,7 @@ class Account {
                 return Promise.resolve(transaction.txID);
             }
         } catch (ex) {
-            logger.error('Failed to send basic token:', ex);
+            console.error('Failed to send basic token:', ex);
             return Promise.reject(ex);
         }
     }
@@ -606,7 +604,7 @@ class Account {
                 return Promise.resolve(transaction.txID);
             }
         } catch (ex) {
-            logger.error('Failed to send smart token:', ex);
+            console.error('Failed to send smart token:', ex);
             return Promise.reject(ex);
         }
     }
@@ -616,7 +614,7 @@ class Account {
             const txId = await NodeService.sunWeb.depositTrx(amount, FEE.DEPOSIT_FEE, FEE.FEE_LIMIT, {}, this.privateKey);
             return Promise.resolve(txId);
         } catch (ex) {
-            logger.error('Failed to send TRX:', ex);
+            console.error('Failed to send TRX:', ex);
             return Promise.reject(ex);
         }
     }
@@ -626,7 +624,7 @@ class Account {
             const txId = await NodeService.sunWeb.withdrawTrx(amount, FEE.WITHDRAW_FEE, FEE.FEE_LIMIT, {}, this.privateKey);
             return Promise.resolve(txId);
         } catch (ex) {
-            logger.error('Failed to send TRX:', ex);
+            console.error('Failed to send TRX:', ex);
             return Promise.reject(ex);
         }
     }
@@ -636,7 +634,7 @@ class Account {
             const txId = await NodeService.sunWeb.depositTrc10(id, amount, FEE.DEPOSIT_FEE, FEE.FEE_LIMIT, {}, this.privateKey);
             return Promise.resolve(txId);
         } catch (ex) {
-            logger.error('Failed to send TRX:', ex);
+            console.error('Failed to send TRX:', ex);
             return Promise.reject(ex);
         }
     }
@@ -646,7 +644,7 @@ class Account {
             const txId = await NodeService.sunWeb.withdrawTrc10(id, amount, FEE.WITHDRAW_FEE, FEE.FEE_LIMIT, {}, this.privateKey);
             return Promise.resolve(txId);
         } catch (ex) {
-            logger.error('Failed to send TRX:', ex);
+            console.error('Failed to send TRX:', ex);
             return Promise.reject(ex);
         }
     }
@@ -661,7 +659,7 @@ class Account {
                 return Promise.resolve('failed');
             }
         } catch (ex) {
-            logger.error('Failed to send TRX:', ex);
+            console.error('Failed to send TRX:', ex);
             return Promise.reject(ex);
         }
     }
@@ -673,7 +671,7 @@ class Account {
             return Promise.resolve(txId);
 
         } catch (ex) {
-            logger.error('Failed to send TRX:', ex);
+            console.error('Failed to send TRX:', ex);
             return Promise.reject(ex);
         }
     }

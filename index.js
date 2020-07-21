@@ -1,4 +1,3 @@
-import Logger from './lib/logger';
 import MessageDuplex from './lib/MessageDuplex';
 import NodeService from './fullnode';
 import StorageService from './storage';
@@ -11,7 +10,6 @@ import { CONFIRMATION_TYPE } from './lib/constants';
 import { BackgroundAPI } from './lib/api';
 
 const duplex = new MessageDuplex.Host();
-const logger = new Logger('backgroundScript');
 
 const backgroundScript = {
     walletService: Utils.requestHandler(
@@ -220,7 +218,7 @@ const backgroundScript = {
                             const { duration = 0 } = appWhitelist;
                             const signedTransaction = await account.sign(input);
                             if(appWhitelist && (duration === -1 || duration >= Date.now())){
-                                logger.info('Automatically signing transaction', signedTransaction);
+                                console.info('Automatically signing transaction', signedTransaction);
                                 return resolve({
                                     success: true,
                                     data: signedTransaction,
@@ -288,7 +286,7 @@ const backgroundScript = {
                             const expiration = whitelist[ hostname ];
 
                             if(expiration === -1 || expiration >= Date.now()) {
-                                logger.info('Automatically signing transaction', signedTransaction);
+                                console.info('Automatically signing transaction', signedTransaction);
 
                                 return resolve({
                                     success: true,
@@ -300,7 +298,7 @@ const backgroundScript = {
 
                         const authorizeDapps = this.walletService.getAuthorizeDapps();
                         if( contractType === 'TriggerSmartContract' && authorizeDapps.hasOwnProperty(contractAddress)){
-                            logger.info('Automatically signing transaction', signedTransaction);
+                            console.info('Automatically signing transaction', signedTransaction);
 
                             return resolve({
                                 success: true,
@@ -317,7 +315,7 @@ const backgroundScript = {
                             input
                         }, uuid, resolve);
                     } catch(ex) {
-                        logger.error('Failed to sign transaction:', ex);
+                        console.error('Failed to sign transaction:', ex);
 
                         return resolve({
                             success: false,

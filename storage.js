@@ -1,9 +1,7 @@
 import extensionizer from 'extensionizer';
-import Logger from './lib/logger';
 import Utils from './lib/utils';
 import NodeService from './fullnode';
 import axios from 'axios';
-const logger = new Logger('StorageService');
 
 const StorageService = {
     // We could instead scope the data so we don't need this array
@@ -114,7 +112,7 @@ const StorageService = {
 
     async unlock(password) {
         if(this.ready) {
-            logger.error('Attempted to decrypt data whilst already unencrypted');
+            console.error('Attempted to decrypt data whilst already unencrypted');
             return 'ERRORS.ALREADY_UNLOCKED';
         }
 
@@ -135,11 +133,11 @@ const StorageService = {
                 );
             }
         } catch(ex) {
-            logger.warn('Failed to decrypt wallet (wrong password?):', ex);
+            console.warn('Failed to decrypt wallet (wrong password?):', ex);
             return 'ERRORS.INVALID_PASSWORD';
         }
 
-        logger.info('Decrypted wallet data');
+        console.info('Decrypted wallet data');
 
         this.password = password;
         this.ready = true;
@@ -153,7 +151,7 @@ const StorageService = {
     },
 
     selectAccount(address) {
-        logger.info(`Storing selected account: ${ address }`);
+        console.info(`Storing selected account: ${ address }`);
 
         this.selectedAccount = address;
         this.save('selectedAccount');
@@ -183,7 +181,7 @@ const StorageService = {
     },
 
     deleteAccount(address) {
-        logger.info('Deleting account', address);
+        console.info('Deleting account', address);
 
         delete this.accounts[ address ];
         //delete this.transactions[ address ];
@@ -192,42 +190,42 @@ const StorageService = {
     },
 
     deleteNode(nodeID) {
-        logger.info('Deleting node', nodeID);
+        console.info('Deleting node', nodeID);
 
         delete this.nodes.nodeList[ nodeID ];
         this.save('nodes');
     },
 
     saveNode(nodeID, node) {
-        logger.info('Saving node', node);
+        console.info('Saving node', node);
 
         this.nodes.nodeList[ nodeID ] = node;
         this.save('nodes');
     },
 
     saveChain(chainId ,chain) {
-        logger.info('Saving chain', chain);
+        console.info('Saving chain', chain);
 
         this.chains.chainList[ chainId ] = chain;
         this.save('chains');
     },
 
     selectNode(nodeID) {
-        logger.info('Saving selected node', nodeID);
+        console.info('Saving selected node', nodeID);
 
         this.nodes.selectedNode = nodeID;
         this.save('nodes');
     },
 
     selectChain(chainID) {
-        logger.info('Saving selected chain', chainID);
+        console.info('Saving selected chain', chainID);
 
         this.chains.selectedChain = chainID;
         this.save('chains');
     },
 
     saveAccount(account) {
-        logger.info('Saving account', account);
+        console.info('Saving account', account);
 
         const {
             transactions,
@@ -241,19 +239,19 @@ const StorageService = {
     },
 
     setSelectedToken(token) {
-        logger.info('Saving selectedToken', token);
+        console.info('Saving selectedToken', token);
         this.selectedToken = token;
         this.save('selectedToken');
     },
 
     setLanguage(language){
-        logger.info('Saving language', language);
+        console.info('Saving language', language);
         this.language = language;
         this.save('language');
     },
 
     setSetting(setting){
-        logger.info('Saving setting', setting);
+        console.info('Saving setting', setting);
         this.setting = setting;
         this.save('setting');
     },
@@ -289,7 +287,7 @@ const StorageService = {
                 selectedAccount: currentAccount
             };
         } catch(ex) {
-            logger.info('Failed to migrate (wrong password?):', ex);
+            console.info('Failed to migrate (wrong password?):', ex);
 
             return {
                 error: true
@@ -301,7 +299,7 @@ const StorageService = {
         this.password = password;
         this.ready = true;
 
-        logger.info('Set storage password');
+        console.info('Set storage password');
     },
 
     addPendingTransaction(address, txID) {
@@ -311,7 +309,7 @@ const StorageService = {
         if(this.pendingTransactions[ address ].some(tx => tx.txID === txID))
             return;
 
-        logger.info('Adding pending transaction:', { address, txID });
+        console.info('Adding pending transaction:', { address, txID });
 
         this.pendingTransactions[ address ].push({
             nextCheck: Date.now() + 5000,
@@ -325,7 +323,7 @@ const StorageService = {
         if(!(address in this.pendingTransactions))
             return;
 
-        logger.info('Removing pending transaction:', { address, txID });
+        console.info('Removing pending transaction:', { address, txID });
 
         this.pendingTransactions[ address ] = this.pendingTransactions[ address ].filter(transaction => (
             transaction.txID !== txID
@@ -365,12 +363,12 @@ const StorageService = {
 
     save(...keys) {
         if(!this.ready)
-            return logger.error('Attempted to write storage when not ready');
+            return console.error('Attempted to write storage when not ready');
 
         if(!keys.length)
             keys = this.storageKeys;
 
-        logger.info(`Writing storage for keys ${ keys.join(', ') }`);
+        console.info(`Writing storage for keys ${ keys.join(', ') }`);
 
         keys.forEach(key => (
             this.storage.set({
@@ -378,7 +376,7 @@ const StorageService = {
             })
         ));
 
-        logger.info('Storage saved');
+        console.info('Storage saved');
     },
 
     /**
@@ -403,7 +401,7 @@ const StorageService = {
         };
 
 
-        logger.info(`Cached token ${ tokenID }:`, this.tokenCache[ tokenID ]);
+        console.info(`Cached token ${ tokenID }:`, this.tokenCache[ tokenID ]);
 
         this.save('tokenCache');
     },
@@ -414,7 +412,7 @@ const StorageService = {
         }
         if(!isFromStorage) {
             const { data: { data: recommend } } = await axios.get('https://list.tronlink.org/dapphouseapp/plug').catch(e => {
-                logger.error('Get dapp recommend list fail',e);
+                console.error('Get dapp recommend list fail',e);
                 return { data: { data: this.dappList.recommend } };
             });
             this.dappList.recommend = recommend;
@@ -451,13 +449,13 @@ const StorageService = {
     },
 
     purge() {
-        logger.warn('Purging TronLink. This will remove all stored transaction data');
+        console.warn('Purging TronLink. This will remove all stored transaction data');
 
         this.storage.set({
             transactions: Utils.encrypt({}, this.password)
         });
 
-        logger.info('Purge complete. Please reload TronLink');
+        console.info('Purge complete. Please reload TronLink');
     }
 };
 

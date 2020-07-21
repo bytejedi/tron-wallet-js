@@ -1,4 +1,3 @@
-import Logger from './lib/logger';
 import EventEmitter from 'eventemitter3';
 import StorageService from './storage';
 import NodeService from './fullnode';
@@ -15,7 +14,6 @@ import {
     API_URL
 } from './lib/constants';
 
-const logger = new Logger('WalletService');
 let basicPrice;
 let smartPrice;
 let usdtPrice;
@@ -55,7 +53,7 @@ class Wallet extends EventEmitter {
 
     migrate(password) {
         if(!StorageService.needsMigrating) {
-            logger.info('No migration required');
+            console.info('No migration required');
             return false;
         }
 
@@ -92,7 +90,7 @@ class Wallet extends EventEmitter {
         if(this.state === appState)
             return;
 
-        logger.info(`Setting app state to ${ appState }`);
+        console.info(`Setting app state to ${ appState }`);
 
         this.state = appState;
         this.emit('newState', appState);
@@ -131,18 +129,18 @@ class Wallet extends EventEmitter {
     async _pollAccounts() {
         clearTimeout(this.timer);
         if(!this.shouldPoll) {
-            logger.info('Stopped polling');
+            console.info('Stopped polling');
             return;
         }
 
         const accounts = Object.values(this.accounts);
         if(accounts.length > 0) {
             // const { data: { data: basicTokenPriceList } } = await axios.get('https://bancor.trx.market/api/exchanges/list?sort=-balance').catch(e => {
-            //     logger.error('get trc10 token price fail');
+            //     console.error('get trc10 token price fail');
             //     return { data: { data: [] } };
             // });
             const { data: { data: { rows: smartTokenPriceList } } } = await axios.get('https://api.trx.market/api/exchange/marketPair/list').catch(e => {
-                logger.error('get trc20 token price fail');
+                console.error('get trc20 token price fail');
                 return { data: { data: { rows: [] } } };
             });
             const prices = StorageService.prices;
@@ -157,7 +155,7 @@ class Wallet extends EventEmitter {
                             this.emit('setAccount', this.selectedAccount);
                         }
                     }).catch(e => {
-                        logger.error(`update account ${account.address} fail`, e);
+                        console.error(`update account ${account.address} fail`, e);
                     });
                 } else {
                     await account.update(basicPrice, smartPrice, usdtPrice);
@@ -180,7 +178,7 @@ class Wallet extends EventEmitter {
             StorageService.setPrices(res[0].data, res[1].data);
             this.emit('setPriceList', [res[0].data, res[1].data]);
         }).catch(e => {
-            logger.error('Failed to update prices',e);
+            console.error('Failed to update prices',e);
         });
 
     }
@@ -245,7 +243,7 @@ class Wallet extends EventEmitter {
 
     startPolling() {
 
-        logger.info('Started polling');
+        console.info('Started polling');
 
         this.shouldPoll = true;
         this._pollAccounts();
@@ -304,13 +302,13 @@ class Wallet extends EventEmitter {
             APP_STATE.TRANSFER
         ];
         if(!stateAry.includes(appState))
-            return logger.error(`Attempted to change app state to ${ appState }. Only 'restoring' and 'creating' is permitted`);
+            return console.error(`Attempted to change app state to ${ appState }. Only 'restoring' and 'creating' is permitted`);
 
         this._setState(appState);
     }
 
     async resetState() {
-        logger.info('Resetting app state');
+        console.info('Resetting app state');
 
         if(!await StorageService.dataExists())
             return this._setState(APP_STATE.UNINITIALISED);
@@ -341,7 +339,7 @@ class Wallet extends EventEmitter {
 
         this._updatePrice();
 
-        logger.info('User has set a password');
+        console.info('User has set a password');
         this._setState(APP_STATE.UNLOCKED);
 
         const node = NodeService.getCurrentNode();
@@ -355,7 +353,7 @@ class Wallet extends EventEmitter {
 
     async unlockWallet(password) {
         if(this.state !== APP_STATE.PASSWORD_SET) {
-            logger.error('Attempted to unlock wallet whilst not in PASSWORD_SET state');
+            console.error('Attempted to unlock wallet whilst not in PASSWORD_SET state');
             return Promise.reject('ERRORS.NOT_LOCKED');
         }
 
@@ -370,12 +368,12 @@ class Wallet extends EventEmitter {
 
         const unlockFailed = await StorageService.unlock(password);
         if(unlockFailed) {
-            logger.error(`Failed to unlock wallet: ${ unlockFailed }`);
+            console.error(`Failed to unlock wallet: ${ unlockFailed }`);
             return Promise.reject(unlockFailed);
         }
 
         if(!StorageService.hasAccounts) {
-            logger.info('Wallet does not have any accounts');
+            console.info('Wallet does not have any accounts');
             return this._setState(APP_STATE.UNLOCKED);
         }
 
@@ -441,7 +439,7 @@ class Wallet extends EventEmitter {
         if(this.state !== APP_STATE.REQUESTING_CONFIRMATION)
             this._setState(APP_STATE.REQUESTING_CONFIRMATION);
 
-        logger.info('Added confirmation to queue', confirmation);
+        console.info('Added confirmation to queue', confirmation);
 
         this.emit('setConfirmations', this.confirmations);
         this._openPopup();
@@ -465,7 +463,7 @@ class Wallet extends EventEmitter {
                 this.appWhitelist[ hostname ] = {};
 
             this.appWhitelist[ hostname ].duration = duration === -1 ? -1 : Date.now() + duration;
-            logger.info(`Added auto sign on host ${ hostname } with duration ${ duration } to whitelist`);
+            console.info(`Added auto sign on host ${ hostname } with duration ${ duration } to whitelist`);
 
             ga('send', 'event', {
                 eventCategory: 'Transaction',
@@ -486,7 +484,7 @@ class Wallet extends EventEmitter {
                     Date.now() + duration
             );
 
-            logger.info(`Added contact ${ address } on host ${ hostname } with duration ${ duration } to whitelist`);
+            console.info(`Added contact ${ address } on host ${ hostname } with duration ${ duration } to whitelist`);
 
             ga('send', 'event', {
                 eventCategory: 'Smart Contract',
@@ -590,7 +588,7 @@ class Wallet extends EventEmitter {
      */
 
     async addAccount({ mnemonic, name }) {
-        logger.info(`Adding account '${ name }' from popup`);
+        console.info(`Adding account '${ name }' from popup`);
         if(Object.keys(this.accounts).length === 0) {
             this.setCache();
         }
@@ -624,7 +622,7 @@ class Wallet extends EventEmitter {
      */
 
     async importAccount({ privateKey, name }) {
-        logger.info(`Importing account '${ name }' from popup`);
+        console.info(`Importing account '${ name }' from popup`);
 
         const account = new Account(
             privateKey.match(/^T/) && TronWeb.isAddress(privateKey) ? ACCOUNT_TYPE.LEDGER : ACCOUNT_TYPE.PRIVATE_KEY,
@@ -888,7 +886,7 @@ class Wallet extends EventEmitter {
             );
             return result;
         } catch(ex) {
-            logger.error('Failed to rent energy:', ex);
+            console.error('Failed to rent energy:', ex);
             return Promise.reject(ex);
         }
     }
@@ -896,25 +894,25 @@ class Wallet extends EventEmitter {
     async bankOrderNotice({ energyAddress, trxHash, requestUrl }) {
         const { data: isValid } = await axios.post(requestUrl, { receiver_address: energyAddress, trxHash } )
             .then(res => res.data)
-            .catch(err => { logger.error(err); });
+            .catch(err => { console.error(err); });
         if(!isValid)
-            return logger.warn('Failed to get bank order data');
+            return console.warn('Failed to get bank order data');
         return isValid;
     }
 
     async getBankDefaultData({ requestUrl }) {
         const { data: defaultData } = await axios(requestUrl)
             .then(res => res.data)
-            .catch(err => { logger.error(err); });
+            .catch(err => { console.error(err); });
         if(!defaultData)
-            return logger.warn('Failed to get default data');
+            return console.warn('Failed to get default data');
         return defaultData;
     }
 
     async isValidOverTotal ({ receiverAddress, freezeAmount, requestUrl }) {
         const { data: isValid } = await axios.get(requestUrl, { params: { receiver_address: receiverAddress, freezeAmount } })
             .then(res => res.data)
-            .catch(err => { logger.error(err); });
+            .catch(err => { console.error(err); });
         let isValidVal = 0;
         if(isValid) isValidVal = 0;else isValidVal = 1;
         return isValidVal;
@@ -923,18 +921,18 @@ class Wallet extends EventEmitter {
     async calculateRentCost ({ receiverAddress, freezeAmount, days, requestUrl }) {
         const { data: calculateData } = await axios.get(requestUrl, { params: { receiver_address: receiverAddress, freezeAmount, days } })
             .then(res => res.data)
-            .catch(err => { logger.error(err); });
+            .catch(err => { console.error(err); });
         if(!calculateData)
-            return logger.warn('Failed to get payMount data');
+            return console.warn('Failed to get payMount data');
         return calculateData;
     }
 
     async isValidOrderAddress({ address, requestUrl }) {
         const { data: isRentData } = await axios.get(requestUrl, { params: { receiver_address: address } })
             .then(res => res.data)
-            .catch(err => { logger.error(err); });
+            .catch(err => { console.error(err); });
         if(!isRentData)
-            return logger.warn('Failed to get valid order address data');
+            return console.warn('Failed to get valid order address data');
         return isRentData;
     }
 
@@ -942,14 +940,14 @@ class Wallet extends EventEmitter {
         // const account = await NodeService.tronWeb.trx.getUnconfirmedAccount(address);
         const account = await NodeService.tronWeb.trx.getAccountResources(address);
         if(!account.TotalEnergyLimit)
-            return logger.warn('Failed to get online address data');
+            return console.warn('Failed to get online address data');
         return account;
     }
 
     async getBankRecordList({ address, limit, start, type, requestUrl }) {
         const { data: { data: recordData } } = await axios.get(requestUrl, { params: { receiver_address: address, limit, start, type } })
         if(!recordData)
-            return logger.warn('Failed to get bank record data');
+            return console.warn('Failed to get bank record data');
         return recordData;
     }
 
@@ -962,9 +960,9 @@ class Wallet extends EventEmitter {
     async getBankRecordDetail({ id, requestUrl }) {
         const { data: bankRecordDetail } = await axios.get(requestUrl, { params: { id } })
             .then(res => res.data)
-            .catch(err => { logger.error(err); });
+            .catch(err => { console.error(err); });
         if(!bankRecordDetail)
-            return logger.warn('Failed to get bank record detail data');
+            return console.warn('Failed to get bank record detail data');
         return bankRecordDetail;
     }
 
