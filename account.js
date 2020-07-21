@@ -1,8 +1,8 @@
-import StorageService from 'storage';
+import StorageService from './storage';
 import TronWeb from 'tronweb';
 import Logger from './lib/logger';
 import Utils from './lib/utils';
-import NodeService from 'fullnode';
+import NodeService from './fullnode';
 
 import { BigNumber } from 'bignumber.js';
 

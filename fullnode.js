@@ -1,4 +1,4 @@
-import StorageService from 'storage';
+import StorageService from './storage';
 import randomUUID from 'uuid/v4';
 import TronWeb from 'tronweb';
 import SunWeb from 'sunweb';

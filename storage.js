@@ -1,7 +1,7 @@
 import extensionizer from 'extensionizer';
 import Logger from './lib/logger';
 import Utils from './lib/utils';
-import NodeService from 'fullnode';
+import NodeService from './fullnode';
 import axios from 'axios';
 const logger = new Logger('StorageService');
 
