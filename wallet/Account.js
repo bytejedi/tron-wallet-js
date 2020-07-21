@@ -1,8 +1,8 @@
-import StorageService from '../StorageService';
+import StorageService from '../storage';
 import TronWeb from 'tronweb';
-import Logger from '../../../lib/logger';
-import Utils from '../../../lib/utils';
-import NodeService from '../NodeService';
+import Logger from '../lib/logger';
+import Utils from '../lib/utils';
+import NodeService from '../node';
 
 import { BigNumber } from 'bignumber.js';
 
@@ -12,7 +12,7 @@ import {
     FEE,
     TOP_TOKEN,
     API_URL
-} from '../../../lib/constants';
+} from '../lib/constants';
 import axios from 'axios';
 
 BigNumber.config({ EXPONENTIAL_AT: [-20, 30] });

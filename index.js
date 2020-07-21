@@ -1,14 +1,14 @@
-import Logger from '../lib/logger';
-import MessageDuplex from '../lib/MessageDuplex';
-import NodeService from './services/NodeService';
-import StorageService from './services/StorageService';
-import WalletService from './services/WalletService';
-import Utils from '../lib/utils';
-import transactionBuilder from '../lib/transactionBuilder';
+import Logger from './lib/logger';
+import MessageDuplex from './lib/MessageDuplex';
+import NodeService from './node';
+import StorageService from './storage';
+import WalletService from './wallet';
+import Utils from './lib/utils';
+import transactionBuilder from './lib/transactionBuilder';
 import TronWeb from 'tronweb';
 
-import { CONFIRMATION_TYPE } from '../lib/constants';
-import { BackgroundAPI } from '../lib/api';
+import { CONFIRMATION_TYPE } from './lib/constants';
+import { BackgroundAPI } from './lib/api';
 import { version } from './package.json';
 
 const duplex = new MessageDuplex.Host();

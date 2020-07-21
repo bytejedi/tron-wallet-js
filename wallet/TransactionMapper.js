@@ -1,4 +1,4 @@
-import StorageService from '../StorageService';
+import StorageService from '../storage';
 
 const TransactionMapper = {
     async mapAll(transactions) {
