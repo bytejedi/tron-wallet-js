@@ -1,23 +1,15 @@
-import Logger from '@tronlink/lib/logger';
-import MessageDuplex from '@tronlink/lib/MessageDuplex';
+import Logger from '@tron-wallet-js/lib/logger';
+import MessageDuplex from '@tron-wallet-js/lib/MessageDuplex';
 import NodeService from './services/NodeService';
 import StorageService from './services/StorageService';
 import WalletService from './services/WalletService';
-import Utils from '@tronlink/lib/utils';
-import transactionBuilder from '@tronlink/lib/transactionBuilder';
+import Utils from '@tron-wallet-js/lib/utils';
+import transactionBuilder from '@tron-wallet-js/lib/transactionBuilder';
 import TronWeb from 'tronweb';
 
-import * as Sentry from '@sentry/browser';
-
-import { CONFIRMATION_TYPE } from '@tronlink/lib/constants';
-import { BackgroundAPI } from '@tronlink/lib/api';
+import { CONFIRMATION_TYPE } from '@tron-wallet-js/lib/constants';
+import { BackgroundAPI } from '@tron-wallet-js/lib/api';
 import { version } from './package.json';
-
-// Make error reporting user-configurable
-Sentry.init({
-    dsn: 'http://d29e163582a948cd8addab042f4c65c7@18.220.1.137:9000/6',
-    release: `TronLink@${ version }`
-});
 
 const duplex = new MessageDuplex.Host();
 const logger = new Logger('backgroundScript');

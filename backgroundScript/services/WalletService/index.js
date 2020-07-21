@@ -1,11 +1,11 @@
-import Logger from '@tronlink/lib/logger';
+import Logger from '@tron-wallet-js/lib/logger';
 import EventEmitter from 'eventemitter3';
 import StorageService from '../StorageService';
 import NodeService from '../NodeService';
 import Account from './Account';
 import axios from 'axios';
 import extensionizer from 'extensionizer';
-import Utils from '@tronlink/lib/utils';
+import Utils from '@tron-wallet-js/lib/utils';
 import TronWeb from 'tronweb';
 
 import {
@@ -13,7 +13,7 @@ import {
     ACCOUNT_TYPE,
     CONTRACT_ADDRESS,
     API_URL
-} from '@tronlink/lib/constants';
+} from '@tron-wallet-js/lib/constants';
 
 const logger = new Logger('WalletService');
 let basicPrice;

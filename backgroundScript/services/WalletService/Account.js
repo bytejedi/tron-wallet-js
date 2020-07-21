@@ -1,7 +1,7 @@
 import StorageService from '../StorageService';
 import TronWeb from 'tronweb';
-import Logger from '@tronlink/lib/logger';
-import Utils from '@tronlink/lib/utils';
+import Logger from '@tron-wallet-js/lib/logger';
+import Utils from '@tron-wallet-js/lib/utils';
 import NodeService from '../NodeService';
 
 import { BigNumber } from 'bignumber.js';
@@ -12,7 +12,7 @@ import {
     FEE,
     TOP_TOKEN,
     API_URL
-} from '@tronlink/lib/constants';
+} from '@tron-wallet-js/lib/constants';
 import axios from 'axios';
 
 BigNumber.config({ EXPONENTIAL_AT: [-20, 30] });
