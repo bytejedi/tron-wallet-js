@@ -4,9 +4,6 @@
   "description": "",
   "main": "index.js",
   "private": true,
-  "directories": {
-    "lib": "lib"
-  },
   "dependencies": {
     "@tronscan/client": "^0.2.48",
     "@ledgerhq/hw-transport-u2f": "^4.31.0",
