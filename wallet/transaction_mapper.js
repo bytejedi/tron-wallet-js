@@ -1,6 +1,6 @@
 import StorageService from '../storage';
 
-const TransactionMapper = {
+const Transaction_mapper = {
     async mapAll(transactions) {
         const newTransactions = [];
 
@@ -74,4 +74,4 @@ const TransactionMapper = {
     }
 };
 
-export default TransactionMapper;
+export default Transaction_mapper;
