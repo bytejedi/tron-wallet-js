@@ -1,11 +1,11 @@
-import Logger from '../lib/logger';
+import Logger from './lib/logger';
 import EventEmitter from 'eventemitter3';
-import StorageService from '../storage';
-import NodeService from '../node';
-import Account from './Account';
+import StorageService from 'storage';
+import NodeService from 'fullnode';
+import Account from 'account';
 import axios from 'axios';
 import extensionizer from 'extensionizer';
-import Utils from '../lib/utils';
+import Utils from './lib/utils';
 import TronWeb from 'tronweb';
 
 import {
@@ -13,7 +13,7 @@ import {
     ACCOUNT_TYPE,
     CONTRACT_ADDRESS,
     API_URL
-} from '../lib/constants';
+} from './lib/constants';
 
 const logger = new Logger('WalletService');
 let basicPrice;
