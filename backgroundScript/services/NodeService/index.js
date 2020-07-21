@@ -2,8 +2,8 @@ import StorageService from '../StorageService';
 import randomUUID from 'uuid/v4';
 import TronWeb from 'tronweb';
 import SunWeb from 'sunweb';
-import Logger from '@tron-wallet-js/lib/logger';
-import { CONTRACT_ADDRESS,SIDE_CHAIN_ID,NODE } from '@tron-wallet-js/lib/constants';
+import Logger from '../../../lib/logger';
+import { CONTRACT_ADDRESS,SIDE_CHAIN_ID,NODE } from '../../../lib/constants';
 import { BigNumber } from 'bignumber.js';
 
 const logger = new Logger('NodeService');

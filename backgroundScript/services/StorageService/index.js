@@ -1,6 +1,6 @@
 import extensionizer from 'extensionizer';
-import Logger from '@tron-wallet-js/lib/logger';
-import Utils from '@tron-wallet-js/lib/utils';
+import Logger from '../../../lib/logger';
+import Utils from '../../../lib/utils';
 import NodeService from '../NodeService';
 import axios from 'axios';
 const logger = new Logger('StorageService');
