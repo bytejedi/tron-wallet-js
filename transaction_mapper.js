@@ -1,5 +1,3 @@
-import StorageService from './storage';
-
 const Transaction_mapper = {
     async mapAll(transactions) {
         const newTransactions = [];
@@ -51,13 +49,6 @@ const Transaction_mapper = {
                      parameter.value.asset_name,
                      'hex'
                 ).toString('utf8');
-                if(!StorageService.tokenCache.hasOwnProperty(tokenID))
-                    await StorageService.cacheToken(tokenID);
-
-                const {
-                    decimals,
-                    name
-                } = StorageService.tokenCache[ tokenID ];
 
                 newTransaction.sender = owner_address; // eslint-disable-line
                 newTransaction.recipient = to_address; // eslint-disable-line

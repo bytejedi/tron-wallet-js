@@ -5,35 +5,19 @@
   "main": "index.js",
   "private": true,
   "dependencies": {
-    "@tronscan/client": "^0.2.48",
-    "@ledgerhq/hw-transport-u2f": "^4.31.0",
     "aes-js": "^3.1.2",
-    "bip32": "^1.0.2",
-    "bip39": "^2.5.0",
-    "crypto": "^1.0.1",
-    "dateformat": "^3.0.3",
-    "eventemitter3": "^3.1.0",
-    "extensionizer": "^1.0.1",
-    "pbkdf2": "^3.0.17",
-    "tronweb": "^2.7.4",
-    "uuid": "^3.3.2",
-    "ethers": "^4.0.7",
     "axios": "^0.18.0",
     "bignumber.js": "^8.0.1",
+    "bip32": "^1.0.2",
+    "bip39": "^2.5.0",
     "buffer": "^5.2.1",
-    "sunweb": "^1.0.7"
+    "crypto": "^1.0.1",
+    "dateformat": "^3.0.3",
+    "ethers": "^4.0.7",
+    "pbkdf2": "^3.0.17",
+    "tronweb": "^2.7.4"
   },
-  "devDependencies": {
-    "@babel/plugin-transform-runtime": "^7.1.0",
-    "@babel/core": "^7.1.2",
-    "@babel/preset-env": "^7.1.0",
-    "babel-loader": "^8.0.4",
-    "webpack": "^4.43.0",
-    "webpack-cli": "^3.1.2"
-  },
-  "scripts": {
-    "build": "webpack --config ./webpack.config.js --progress --colors -o ./dist/wallet.js"
-  },
+  "scripts": {},
   "repository": {
     "type": "git",
     "url": "git+https://github.com/bytejedi/tron-wallet-js.git"
