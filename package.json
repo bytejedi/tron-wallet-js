@@ -5,6 +5,7 @@
   "main": "index.js",
   "private": true,
   "dependencies": {
+    "@tronscan/client": "^0.2.48",
     "aes-js": "^3.1.2",
     "axios": "^0.18.0",
     "bignumber.js": "^8.0.1",
